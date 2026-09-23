@@ -1,0 +1,69 @@
+{
+  "brand": "NEMATI STOR",
+  "slogan": "Choose quality, feel the difference.",
+  "nav": {
+    "home": "Home",
+    "categories": "Categories",
+    "search": "Search products...",
+    "cart": "Cart",
+    "whatsappOrder": "Order on WhatsApp"
+  },
+  "hero": {
+    "title": "Choose quality, feel the difference.",
+    "subtitle": "A curated collection of the best products, delivered fast across Afghanistan.",
+    "cta1": "Browse products",
+    "cta2": "Order on WhatsApp"
+  },
+  "sections": {
+    "featured": "Featured products",
+    "new": "New arrivals",
+    "bestSellers": "Best sellers",
+    "deals": "Special deals",
+    "categories": "Shop by category"
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "orderWhatsapp": "Order on WhatsApp",
+    "color": "Color",
+    "size": "Size",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "description": "Description",
+    "specs": "Specifications",
+    "quantity": "Quantity",
+    "off": "off"
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "checkout": "Checkout on WhatsApp",
+    "remove": "Remove"
+  },
+  "whatsappMessage": {
+    "greeting": "Hello, I would like to order this product:",
+    "name": "Product name",
+    "price": "Price",
+    "qty": "Quantity",
+    "color": "Color",
+    "size": "Size",
+    "confirm": "Please confirm availability and order details."
+  },
+  "footer": {
+    "about": "NEMATI STOR — a trusted online store for easy, reliable shopping.",
+    "quickLinks": "Quick links",
+    "contact": "Contact us",
+    "rights": "All rights reserved."
+  },
+  "admin": {
+    "login": "Admin login",
+    "email": "Email",
+    "password": "Password",
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "categories": "Categories",
+    "orders": "Orders",
+    "admins": "Admins",
+    "logout": "Log out"
+  }
+}
