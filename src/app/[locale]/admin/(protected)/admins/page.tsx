@@ -19,10 +19,12 @@ export default async function AdminsPage({ params }: { params: { locale: string 
     orderBy: { createdAt: "asc" }
   });
 
+  const formattedAdmins = admins.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }));
+
   return (
     <div>
       <h1 className="mb-8 text-2xl font-bold">{t.admin.admins}</h1>
-      <AdminManager initialAdmins={admins} currentAdminId={(session.user as any).id} />
+      <AdminManager initialAdmins={formattedAdmins} currentAdminId={(session.user as any).id} />
     </div>
   );
 }
