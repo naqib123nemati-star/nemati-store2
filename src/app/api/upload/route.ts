@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import sharp from "sharp";
+import { v2 as cloudinary } from "cloudinary";
 
-// توجه: این روش آپلود، فایل را روی دیسک سرور ذخیره می‌کند و برای توسعه محلی (Local)
-// مناسب است. در بسیاری از سرویس‌های Hosting (مثل Vercel) فایل‌سیستم غیر دائمی است،
-// بنابراین برای Production توصیه می‌شود از یک سرویس ذخیره‌سازی ابری مثل
-// Cloudinary، AWS S3 یا Supabase Storage استفاده شود.
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -19,13 +18,17 @@ export async function POST(req: NextRequest) {
   if (!file) return NextResponse.json({ error: "فایلی ارسال نشده" }, { status: 400 });
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
 
-  const filename = `${Date.now()}-${Math.round(Math.random() * 1e6)}.webp`;
-  const filepath = path.join(uploadDir, filename);
+  const result = await new Promise<any>((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: "nemati-store", format: "webp", transformation: [{ width: 1200, height: 1200, crop: "limit" }] },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    uploadStream.end(buffer);
+  });
 
-  await sharp(buffer).resize(1200, 1200, { fit: "inside" }).webp({ quality: 82 }).toFile(filepath);
-
-  return NextResponse.json({ url: `/uploads/${filename}` });
-}
+  return NextResponse.json({ url: result.secure_url });
+                                                                  }
