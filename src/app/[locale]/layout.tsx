@@ -23,6 +23,9 @@ export async function generateMetadata({
       title: t.brand,
       description: t.hero.subtitle,
       type: "website"
+    },
+    verification: {
+      google: "-VY29Oq_xwDv5dhaUUEkXVxgg0ngJ_k1ZaqREGSyvbQ"
     }
   };
 }
