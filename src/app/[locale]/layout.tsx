@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "../globals.css";
 import { locales, isRtl, getDictionary } from "@/lib/i18n";
 import Header from "@/components/shop/header";
@@ -43,6 +44,18 @@ export default function LocaleLayout({
   return (
     <html lang={params.locale} dir={dir}>
       <body className={fontClass}>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-PFHG09ZSLQ"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PFHG09ZSLQ');
+          `}
+        </Script>
         <Toaster position="top-center" />
         <Header locale={params.locale} />
         <main className="min-h-screen">{children}</main>
