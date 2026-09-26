@@ -40,11 +40,12 @@ export default async function HomePage({ params }: { params: { locale: string } 
             </div>
           </div>
           <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl2 bg-cream-100 shadow-soft">
-  <img
-    src="/images/logo.png"
-    alt={t.brand}
-    className="w-2/3 max-w-[280px] object-contain"
-</div>
+            <img
+              src="/images/logo.png"
+              alt={t.brand}
+              className="w-2/3 max-w-[280px] object-contain"
+            />
+          </div>
         </div>
       </section>
 
@@ -88,4 +89,4 @@ function ProductRow({ title, products, locale }: { title: string; products: any[
       </div>
     </section>
   );
-}
+                             }
