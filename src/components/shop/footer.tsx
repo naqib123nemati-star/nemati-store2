@@ -1,45 +1,69 @@
 import Link from "next/link";
-import { getDictionary } from "@/lib/i18n";
+import { getDictionary, localizedField } from "@/lib/i18n";
+import { prisma } from "@/lib/prisma";
 import { WHATSAPP_LINK } from "@/lib/whatsapp";
 
-export default function Footer({ locale }: { locale: string }) {
+const BLUE = "#1E5FBF";
+const BLUE_DARK = "#1B3A6B";
+
+export default async function Footer({ locale }: { locale: string }) {
   const t = getDictionary(locale);
+  const categories = await prisma.category.findMany({
+    orderBy: { order: "asc" },
+    take: 6
+  });
 
   return (
-    <footer className="mt-24 border-t border-cream-200 bg-white">
-      <div className="container-shop grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-3">
+    <footer className="mt-10 border-t border-cream-200" style={{ background: BLUE_DARK }}>
+      <div className="container-shop grid gap-10 py-12 text-white sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
-            <img src="/images/logo.png" alt="" className="h-9 w-9 object-contain" />
-            <span className="text-lg font-bold">{t.brand}</span>
+            <img src="/images/logo.png" alt="نعمتی استور" className="h-8 w-8 object-contain" />
+            <span className="text-lg font-extrabold">نعمتی استور</span>
           </div>
-          <p className="max-w-xs text-sm leading-7 text-ink-700">{t.footer.about}</p>
+          <p className="text-sm text-white/70">
+            کیفیت را انتخاب کنید، تفاوت را احساس کنید.
+          </p>
         </div>
 
         <div>
-          <h4 className="mb-3 font-semibold">{t.footer.quickLinks}</h4>
-          <ul className="space-y-2 text-sm text-ink-700">
-            <li><Link href={`/${locale}`}>{t.nav.home}</Link></li>
-            <li><Link href={`/${locale}#categories`}>{t.nav.categories}</Link></li>
-            <li><Link href={`/${locale}/cart`}>{t.nav.cart}</Link></li>
+          <h3 className="mb-4 text-sm font-bold">دسترسی سریع</h3>
+          <ul className="space-y-2 text-sm text-white/70">
+            <li><Link href={`/${locale}`} className="hover:text-white">خانه</Link></li>
+            <li><Link href={`/${locale}#categories`} className="hover:text-white">دسته‌بندی‌ها</Link></li>
+            <li><Link href={`/${locale}#featured`} className="hover:text-white">محصولات جدید</Link></li>
+            <li><Link href={`/${locale}#about`} className="hover:text-white">درباره ما</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="mb-3 font-semibold">{t.footer.contact}</h4>
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-gold"
-          >
-            {t.nav.whatsappOrder}
-          </a>
+          <h3 className="mb-4 text-sm font-bold">دسته‌بندی‌ها</h3>
+          <ul className="space-y-2 text-sm text-white/70">
+            {categories.map((c) => (
+              <li key={c.id}>
+                <Link href={`/${locale}/category/${c.slug}`} className="hover:text-white">
+                  {localizedField(c, "name", locale)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-4 text-sm font-bold">اطلاعات تماس</h3>
+          <ul className="space-y-2 text-sm text-white/70">
+            <li>
+              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                واتساپ: 0788809892
+              </a>
+            </li>
+            <li>ارسال در سراسر افغانستان</li>
+          </ul>
         </div>
       </div>
 
-      <div className="border-t border-cream-200 py-5 text-center text-xs text-ink-700">
-        © {new Date().getFullYear()} {t.brand} — {t.footer.rights}
+      <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
+        © {new Date().getFullYear()} نعمتی استور — تمام حقوق محفوظ است.
       </div>
     </footer>
   );
