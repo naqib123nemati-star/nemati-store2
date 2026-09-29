@@ -1,106 +1,63 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-import { getDictionary, locales } from "@/lib/i18n";
-import { usePathname } from "next/navigation";
-import { useCartStore } from "@/context/cart-store";
-import { ShoppingBag, Menu, X, Search } from "lucide-react";
+import { WHATSAPP_LINK } from "@/lib/whatsapp";
 
-const localeLabels: Record<string, string> = { fa: "دری", ps: "پښتو", en: "English" };
+const NAV = [
+  { href: "", label: "صفحه اصلی" },
+  { href: "#categories", label: "فروشگاه" },
+  { href: "#categories", label: "دسته‌بندی‌ها" },
+  { href: "#featured", label: "محصولات جدید" },
+  { href: "#about", label: "درباره ما" }
+];
 
 export default function Header({ locale }: { locale: string }) {
-  const t = getDictionary(locale);
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const itemCount = useCartStore((s) => s.items.reduce((n, i) => n + i.quantity, 0));
-
-  function switchLocaleHref(target: string) {
-    const rest = pathname.split("/").slice(2).join("/");
-    return `/${target}/${rest}`;
-  }
-
   return (
-    <header className="sticky top-0 z-40 border-b border-cream-200 bg-cream-50/95 backdrop-blur">
-      <div className="container-shop flex h-20 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-cream-200 bg-white">
+      <div className="container-shop flex items-center justify-between gap-4 py-3">
         <Link href={`/${locale}`} className="flex items-center gap-2 shrink-0">
-          <img src="/images/logo.png" alt="NEMATI STOR" className="h-11 w-11 object-contain" />
-          <span className="text-lg font-bold tracking-tight">{t.brand}</span>
+          <img src="/images/logo.png" alt="نعمتی استور" className="h-9 w-9 object-contain" />
+          <span className="text-lg font-extrabold" style={{ color: "#1B3A6B" }}>
+            نعمتی استور
+          </span>
         </Link>
 
-        <div className="hidden flex-1 items-center md:flex">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute inset-y-0 start-3 my-auto h-4 w-4 text-ink-700/50" />
-            <input
-              type="text"
-              placeholder={t.nav.search}
-              className="w-full rounded-full border border-cream-200 bg-white py-2.5 ps-9 pe-4 text-sm outline-none focus:border-gold-400"
-            />
-          </div>
-        </div>
-
-        <nav className="hidden items-center gap-6 md:flex">
-          <Link href={`/${locale}`} className="text-sm font-medium hover:text-gold-600">
-            {t.nav.home}
-          </Link>
-          <Link href={`/${locale}#categories`} className="text-sm font-medium hover:text-gold-600">
-            {t.nav.categories}
-          </Link>
+        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-700 md:flex">
+          {NAV.map((item) => (
+            <Link key={item.label} href={`/${locale}${item.href}`} className="hover:text-[#1E5FBF]">
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden items-center gap-1 rounded-full border border-cream-200 p-1 sm:flex">
-            {locales.map((l) => (
-              <Link
-                key={l}
-                href={switchLocaleHref(l)}
-                className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                  l === locale ? "bg-ink-900 text-white" : "text-ink-700 hover:bg-cream-100"
-                }`}
-              >
-                {localeLabels[l]}
-              </Link>
-            ))}
+        <div className="hidden flex-1 max-w-xs items-center md:flex">
+          <input
+            type="text"
+            placeholder="جستجوی محصولات..."
+            className="w-full rounded-full border border-cream-200 px-4 py-2 text-sm focus:outline-none focus:ring-2"
+            style={{ ["--tw-ring-color" as any]: "#1E5FBF" }}
+          />
+        </div>
+
+        <div className="flex items-center gap-4">
+          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" aria-label="سفارش از واتساپ">
+            <svg viewBox="0 0 24 24" fill="#25D366" className="h-6 w-6">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.39a9.9 9.9 0 0 0 4.76 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.06c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.11.11-1.79-.11-.41-.13-.94-.3-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.55-1.16-2.96s.73-2.1 1-2.39c.26-.28.56-.35.75-.35h.53c.17 0 .4-.03.62.48.24.56.8 1.94.87 2.08.07.14.11.3.02.48-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.18 1.53 1.91 1.05.94 1.94 1.24 2.22 1.38.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.28.37-.23.62-.14.26.09 1.63.77 1.91.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z" />
+            </svg>
+          </a>
+          <div className="flex items-center gap-2 text-xs font-medium text-ink-700">
+            <Link href="/fa" className={locale === "fa" ? "font-bold" : ""} style={locale === "fa" ? { color: "#1E5FBF" } : {}}>
+              دری
+            </Link>
+            <span>|</span>
+            <Link href="/ps" className={locale === "ps" ? "font-bold" : ""} style={locale === "ps" ? { color: "#1E5FBF" } : {}}>
+              پښتو
+            </Link>
+            <span>|</span>
+            <Link href="/en" className={locale === "en" ? "font-bold" : ""} style={locale === "en" ? { color: "#1E5FBF" } : {}}>
+              EN
+            </Link>
           </div>
-
-          <Link href={`/${locale}/cart`} className="relative rounded-full p-2 hover:bg-cream-100">
-            <ShoppingBag className="h-5 w-5" />
-            {itemCount > 0 && (
-              <span className="absolute -top-1 -end-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white">
-                {itemCount}
-              </span>
-            )}
-          </Link>
-
-          <button className="rounded-full p-2 hover:bg-cream-100 md:hidden" onClick={() => setOpen(!open)}>
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
       </div>
-
-      {open && (
-        <div className="border-t border-cream-200 bg-cream-50 p-4 md:hidden">
-          <div className="mb-3 flex gap-2">
-            {locales.map((l) => (
-              <Link
-                key={l}
-                href={switchLocaleHref(l)}
-                className={`rounded-full px-3 py-1 text-xs font-medium ${
-                  l === locale ? "bg-ink-900 text-white" : "border border-cream-200"
-                }`}
-              >
-                {localeLabels[l]}
-              </Link>
-            ))}
-          </div>
-          <Link href={`/${locale}`} className="block py-2 text-sm font-medium">
-            {t.nav.home}
-          </Link>
-          <Link href={`/${locale}#categories`} className="block py-2 text-sm font-medium">
-            {t.nav.categories}
-          </Link>
-        </div>
-      )}
     </header>
   );
 }
