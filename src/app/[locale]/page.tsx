@@ -17,7 +17,20 @@ async function getHomeData() {
     prisma.product.findMany({ where: { isBestSeller: true }, include: { images: true }, take: 5 }),
     prisma.category.findMany({ orderBy: { order: "asc" } })
   ]);
-  return { featured, newest, bestSellers, categories };
+
+  const categoriesWithImage = await Promise.all(
+    categories.map(async (c) => {
+      const latestProduct = await prisma.product.findFirst({
+        where: { categoryId: c.id },
+        orderBy: { createdAt: "desc" },
+        include: { images: true }
+      });
+      const image = latestProduct?.images?.[0]?.url ?? null;
+      return { ...c, latestImage: image };
+    })
+  );
+
+  return { featured, newest, bestSellers, categories: categoriesWithImage };
 }
 
 export default async function HomePage({ params }: { params: { locale: string } }) {
@@ -78,10 +91,14 @@ export default async function HomePage({ params }: { params: { locale: string } 
               className="flex flex-col items-center gap-2 text-center"
             >
               <span
-                className="flex h-16 w-16 items-center justify-center rounded-full text-3xl shadow-soft"
+                className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full text-3xl shadow-soft"
                 style={{ background: BLUE_SOFT }}
               >
-                {c.icon}
+                {c.latestImage ? (
+                  <img src={c.latestImage} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  c.icon
+                )}
               </span>
               <span className="text-xs font-semibold">{localizedField(c, "name", params.locale)}</span>
             </Link>
@@ -128,7 +145,11 @@ export default async function HomePage({ params }: { params: { locale: string } 
                     مشاهده و خرید
                   </span>
                 </div>
-                <span className="text-6xl">{c.icon}</span>
+                {c.latestImage ? (
+                  <img src={c.latestImage} alt="" className="h-24 w-24 rounded-2xl object-cover" />
+                ) : (
+                  <span className="text-6xl">{c.icon}</span>
+                )}
               </Link>
             ))}
           </div>
