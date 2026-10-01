@@ -67,6 +67,15 @@ export default function LocaleLayout({
             gtag('config', 'G-PFHG09ZSLQ');
           `}
         </Script>
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ("serviceWorker" in navigator) {
+              window.addEventListener("load", function () {
+                navigator.serviceWorker.register("/sw.js");
+              });
+            }
+          `}
+        </Script>
         <Toaster position="top-center" />
         <Header locale={params.locale} />
         <main className="min-h-screen">{children}</main>
@@ -75,4 +84,4 @@ export default function LocaleLayout({
       </body>
     </html>
   );
-                           }
+}
