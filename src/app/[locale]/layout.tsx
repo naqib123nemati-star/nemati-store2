@@ -20,6 +20,17 @@ export async function generateMetadata({
   return {
     title: `${t.brand} | ${t.slogan}`,
     description: t.hero.subtitle,
+    manifest: "/manifest.json",
+    themeColor: "#1E5FBF",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: t.brand
+    },
+    icons: {
+      icon: "/icon-192.png",
+      apple: "/apple-touch-icon.png"
+    },
     openGraph: {
       title: t.brand,
       description: t.hero.subtitle,
@@ -64,4 +75,4 @@ export default function LocaleLayout({
       </body>
     </html>
   );
-}
+                           }
